@@ -39,9 +39,7 @@
 
 ## What This Does
 
-<!-- Your community, and what your classifier sorts posts into. Three or four
-     sentences. -->
-
+TakeMeter works on "Ask HN" posts from Hacker News, where people pose a question or start a discussion for the tech community. The classifier reads a post's title and body and sorts it by what the poster is doing: asking for help with their own problem (`help_request`), polling the community for experiences or opinions (`discussion_question`), asserting a position with nothing to back it (`hot_take`), or building a question or position on a fact stated in the post (`analysis`). The point is to tell apart posts that want an answer, posts that want a conversation, and posts that are really arguments.
 
 
 ---
@@ -54,33 +52,53 @@
      The decision rule is worth a point on its own and it's the thing most
      people leave out. Every taxonomy has a hardest boundary. Name yours. -->
 
-### `label_one`
+I apply the labels in this order and stop at the first one that fits: `help_request`, then `analysis`, then `hot_take`, then `discussion_question`.
 
-**Definition:**
+### `help_request`
 
-**Example 1:**
->
-
-**Example 2:**
->
-
-### `label_two`
-
-**Definition:**
+**Definition:** The poster needs something for themselves, such as a fix, a recommendation, an explanation or confirmation of their own problem.
 
 **Example 1:**
->
+> "Ask HN: My Gemini bill shot up suddenly to 2500 USD in one day". "at a hackathon in bay area i used the api key in my google app script. from that day my usage overshot to insane amounts. Google started charging y card every 30 mins or so."
 
 **Example 2:**
->
+> "Ask HN: Locked out of Google despite knowing password and having email access". "I'm trying to recover my Google account. I know the password, but unfortunately I've lost access to the phone number where Google keeps trying to send the verification code."
+
+### `analysis`
+
+**Definition:** The post's question or position rests on a specific fact that the post itself states, such as a figure, quote, date or named company figure that someone else could check.
+
+**Example 1:**
+> "Ask HN: How do swarms of AI agents work?". "Andrej Karpathy posted about the growing gap in how people experience AI: ~75% have barely used LLMs ~20% use them casually ~0.2% use frontier models professionally for math and code ... Source: https://x.com/karpathy/status/2109361546505966046"
+
+**Example 2:**
+> "Ask HN: Why hasn't AI replaced Tax filing software". "Intuit has a market cap of ~$80B and there are others. Intuit aggressively lobbies against free tax filing or automated tax filing by IRS, which gets all the info anyways."
+
+### `hot_take`
+
+**Definition:** The post asserts a position about how the world is, often phrased as a question, and offers nothing checkable to support it.
+
+**Example 1:**
+> "Ask HN: Why aren't Americans rising up against tipping?". "I've read lots of articles about how Americans hate their tipping culture. But tipping is optional so why don't they just stop? If you don't tip you both help society improve and you save money. Win-win."
+
+**Example 2:**
+> "Ask HN: Why do people say "I built it" when we should say "Claude built it"?". "Everyone says, "I built it," but really we should say, "Claude built it for me," or maybe, "I asked Claude to build this.""
+
+### `discussion_question`
+
+**Definition:** The post asks the community for experiences, opinions or predictions, with no personal problem to solve, no position taken and no stated fact to rest on.
+
+**Example 1:**
+> "Ask HN: Whats the first command you run on a new server?". "When you get access to a new server via ssh, what's the first command you run? ls? nproc? lsb_release -a? uname -a?"
+
+**Example 2:**
+> "Ask HN: Which books did you read at least twice?". "Which books did you read at least twice? Please give author, title, and how often you have read it."
 
 ### The hardest boundary
 
-**Which two labels:**
+**Which two labels:** `hot_take` and `discussion_question`
 
-**The decision rule I used every time:**
-<!-- e.g. "If the post names a specific checkable fact, it's `analysis`, even
-     if the tone is heated." -->
+**The decision rule I used every time:** Take the question mark off. If the title or body still asserts something about how the world is (not about the poster), it's `hot_take`, even when the post ends with "what do you think?". If all that's left is a request for people's experience or opinion, it's `discussion_question`. For example, "Are you hesitant to install vibe-coded apps?" is a `hot_take`, because its body argues that prompt injection could slip a virus into an app and that "we're completely blind to security issues". Two supporting rules settle the neighbouring boundaries. A fact only counts toward `analysis` if the post states it (a link alone is not enough), and `help_request` wins over every other label whenever the poster needs something for themselves.
 
 
 
@@ -139,17 +157,21 @@ More borderline posts (eight in all) are in `hard_cases.md`.
 
 ## The Training Run
 
-<!-- Your starting model, your settings, and anything you changed and why. -->
+**Base model:** `distilbert-base-uncased`, fine-tuned for four-way text classification (`takemeter.ipynb`). It ran on CPU (PyTorch 2.14.1+cpu), with posts truncated or padded to 128 tokens.
 
-**Base model:**
+**Settings:** 3 epochs, learning rate 2e-5, batch size 16, seed 42, max length 128.
 
-**Settings:** <!-- epochs, learning rate, batch size, seed -->
+**Anything I changed from the defaults, and why:** I kept the notebook's default hyperparameters (epochs, learning rate, batch size, max length). The only change was setting `LABELS` to my four labels: `help_request`, `analysis`, `hot_take`, `discussion_question`. I didn't have a reason to change the hyperparameters yet, and next unit's three-seed runs will show whether the default settings are the problem.
 
-**Anything I changed from the defaults, and why:**
+**Split sizes:** 200 posts, split 70/15/15 and stratified by label: 139 train, 31 validation and 30 test. The test split has 11 `discussion_question`, 11 `help_request`, 7 `hot_take` and **1 `analysis`**. `analysis` and `hot_take` both have fewer than about 8 test posts, and with only 1 `analysis` post a single right or wrong guess moves its score from 0 to 1. Expect that label's score to swing wildly between seeds.
 
-**Split sizes:** <!-- train / val / test, and per-label counts in the test
-split. If a label had fewer than about 8 in test, say so — it explains a lot
-of next unit's variance. -->
+| Label | Train | Val | Test |
+|---|---|---|---|
+| `discussion_question` | 52 | 11 | 11 |
+| `help_request` | 50 | 11 | 11 |
+| `hot_take` | 30 | 7 | 7 |
+| `analysis` | 7 | 2 | 1 |
+| **Total** | 139 | 31 | 30 |
 
 
 
@@ -157,26 +179,21 @@ of next unit's variance. -->
 
 ## How I Used AI
 
-<!-- Two specific moments — what you asked, what came back, what you changed.
+I used Claude (Claude Code) throughout unit 5.
 
-     ⚠️ Plus disclosure of any pre-labelling. If you had a model pre-label a
-     batch and then read and corrected every one, say that. It's an allowed
-     workflow and disclosing it costs you nothing. Not disclosing it is the
-     problem. -->
+**Moment 1: finding the labels**
 
-**Moment 1**
+- *What I asked for:* three or four candidate distinctions in the 200 posts that I could point at, rather than "good" and "bad".
+- *What came back:* after reading the posts and running rough regex counts, Claude proposed four: whether the poster describes their own situation, whether the post cites something checkable (23 of 200 contain a URL), whether the question has an answer or is a mood, and whether the poster has a stake or a pitch. The counts were approximate.
+- *What I changed:* I turned those distinctions into four labels, with an order for applying them (`help_request` first, then `analysis`, then `hot_take`, then `discussion_question`). I dropped "poster has a stake" as its own label because only about 10 posts promote something, which is too few to test.
 
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
+**Moment 2: stress-testing the definitions**
 
-**Moment 2**
+- *What I asked for:* eight made-up posts that sit on my label boundaries, to see whether I could classify them cleanly.
+- *What came back:* Claude wrote eight, labelled them, and found three gaps: an unsourced number ("90% of startups") shouldn't count as a checkable fact; "anyone else seeing X right now?" needed a rule; and a post that only links sources (row 11, four arXiv links) was being pulled into `analysis` just for having links. Claude also noted this test is weak because it wrote the posts knowing the definitions.
+- *What I changed:* a fact only counts toward `analysis` if the post itself states it (a figure, quote or date) and the question rests on it. A link alone is not enough, so row 11 is `discussion_question`.
 
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
-
-**Pre-labelling disclosure:**
+**Pre-labelling disclosure:** Claude pre-labelled all 200 posts in `labels.csv` from my written definitions, in one pass, reading roughly the first 500 characters of each. I did not label any posts cold first. The committed version of `labels.csv` has Claude's labels, and every row's `note` says "pre-labelled by Claude, not yet checked by me". Claude's pre-labelling and my corrections are separate steps. Any label I changed after reading the post is mine, and I have not recorded those changes in this README yet.
 
 <!-- ═══════════════════════ UNIT 6 — THE TEST ═══════════════════════
 
