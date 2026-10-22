@@ -91,19 +91,21 @@
 <!-- Where you collected from, how you labelled, your counts, and three hard
      cases. -->
 
-**Where the posts came from:**
+**Where the posts came from:** 200 public "Ask HN" posts from Hacker News, saved in `ask_hn_data/ask_hn_200_posts.json`. Each row in `labels.csv` is the post's title plus body, untrimmed.
 
-**How I labelled them:** <!-- Cold first? Pre-labelled with AI and corrected?
-Say so plainly — the disclosure is required, not penalised. -->
+**How I labelled them:** All 200 labels were pre-labelled by Claude (an AI assistant) from my written definitions, in one pass, using roughly the first 500 characters of each post. Every row's `note` says so. No rows were labelled cold. Label corrections after my own read-through are not recorded here yet.
 
 **Counts per label:**
 
 | Label | Count | Share |
 |---|---|---|
-|  |  |  |
-|  |  |  |
-|  |  |  |
-| **Total** |  | 100% |
+| `discussion_question` | 74 | 37% |
+| `help_request` | 72 | 36% |
+| `hot_take` | 44 | 22% |
+| `analysis` | 10 | 5% |
+| **Total** | 200 | 100% |
+
+`analysis` is thin (10 posts). The stop rule in `criteria.md` (criterion 4) says to merge it into `hot_take` if it has under 30. I have not decided yet. One pair of posts (rows 132 and 133 of the CSV) is the same text, so the usable count is 199 until one is removed.
 
 **Three hard cases**
 
@@ -111,25 +113,27 @@ Say so plainly — the disclosure is required, not penalised. -->
      been, and what you chose. These are worth more than the easy 190. -->
 
 **1.**
-> *The post:*
+> *The post:* "Ask HN: How to deal with shipping AI-written code you don't understand?" It quotes a Meta engineer's LinkedIn post about code feeling like a black box.
 >
-> *Could have been:*
+> *Could have been:* `help_request` or `analysis`
 >
-> *I chose, because:*
+> *I chose, because:* `help_request`. It quotes a source, but the poster is asking how to cope themselves. My rule order checks "does the poster need something for themselves?" before "is a fact stated?".
 
 **2.**
-> *The post:*
+> *The post:* "Ask HN: What happened to open weights models?" It names Ornith-1.5 as "really a creatively post-trained Qwen3.5", then says releases have stalled and everyone is "scrambling for coin".
 >
-> *Could have been:*
+> *Could have been:* `hot_take` or `analysis`
 >
-> *I chose, because:*
+> *I chose, because:* `hot_take`. The checkable detail is an aside, and the main claim (releases stalled, labs scrambling for money) has no support. A stated fact only counts toward `analysis` when the post's question or position rests on it.
 
 **3.**
-> *The post:*
+> *The post:* "Ask HN: How to organize teams to ship AI-written code?" It reads like a poll ("did your team organization change?") but also says "it is not clear how to organize ourselves now".
 >
-> *Could have been:*
+> *Could have been:* `help_request` or `discussion_question`
 >
-> *I chose, because:*
+> *I chose, because:* `help_request`. The poster describes their own team's problem and wants an answer for it, even though the question is phrased as a poll.
+
+More borderline posts (eight in all) are in `hard_cases.md`.
 
 ---
 
