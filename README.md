@@ -209,20 +209,24 @@ I used Claude (Claude Code) throughout unit 5.
 
 | Measure | Baseline | Trained | Difference |
 |---|---|---|---|
-| Overall accuracy |  |  |  |
-| Macro F1 |  |  |  |
-| F1 — `label_one` |  |  |  |
-| F1 — `label_two` |  |  |  |
+| Overall accuracy | 0.400 | 0.500 | +0.100 |
+| Macro F1 | 0.240 | 0.286 | +0.047 |
+| F1 — `analysis` | 0.000 | 0.000 | +0.000 |
+| F1 — `discussion_question` | 0.476 | 0.545 | +0.069 |
+| F1 — `help_request` | 0.483 | 0.600 | +0.117 |
+| F1 — `hot_take` | 0.000 | 0.000 | +0.000 |
+
+**Which baseline this is:** The Baseline column is the **bare-label-names run**: the zero-shot model (`facebook/bart-large-mnli`) was given only the label names, with no definitions (`baseline_results_bare.json`). I also ran it with my written definitions from `label_definitions.txt` (`baseline_results.json`) and that scored lower: accuracy 0.133, macro F1 0.133, with only `help_request` above 0 (F1 0.533). So my definitions were worth **-0.267 accuracy** (0.133 vs 0.400) on this model, meaning they hurt rather than helped. I report the stronger bare-names run as the baseline so the fine-tuning gain is not overstated.
 
 **What I predicted before I looked:**
-<!-- Milestone 1 asks you to write this BEFORE seeing the trained numbers. A
-     prediction made afterwards isn't one. -->
+As there is not much more available label of analysis, I think our prediction for this will be really bad. 
 
 **What the gap actually means:**
-<!-- If the baseline matched your trained model, your fine-tuning added
-     nothing — and that is a real finding, not a failure. Say it plainly. -->
+The fine-tuned model beats the bare-names baseline, but by a small margin: accuracy 0.500 vs 0.400 (+0.100, which is 3 posts out of 30) and macro F1 0.286 vs 0.240. Most of the zero-shot model's ability was already there before any training. It gets `discussion_question` (F1 0.476) and `help_request` (F1 0.483) about half right from the label names alone, and fine-tuning on 139 examples lifts those to 0.545 and 0.600. With only 30 test posts, a gain of 3 posts could easily be noise, so on this evidence fine-tuning added something modest, not something proven.
 
+Neither model can do `analysis` or `hot_take`: both stay at F1 0.000 before and after training. This matches my prediction for `analysis`, which has only 10 labelled posts and 1 test post, so one wrong guess already gives 0. `hot_take` has more data (44 posts, 7 in the test split) and still scored 0, so its failure is not only about count. It is probably the label that is hardest to tell apart from `discussion_question`, which is the boundary I named as my hardest. Because macro F1 averages four labels and two of them are 0, the 0.286 reflects a model that handles only two classes. These numbers could also move a lot between seeds, so I will not treat any single difference as settled until the three-seed runs.
 
+Separately, my written definitions made the zero-shot baseline worse (accuracy 0.133 vs 0.400 with bare names). That is a finding about this zero-shot model, which seems to do better with short label names than with long definitions, not evidence that the definitions are wrong for labelling the data.
 
 ---
 

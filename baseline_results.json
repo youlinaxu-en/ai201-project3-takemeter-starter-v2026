@@ -1,0 +1,190 @@
+{
+  "model": "facebook/bart-large-mnli",
+  "n": 30,
+  "seed": 42,
+  "held_out": true,
+  "used_definitions": true,
+  "scores": {
+    "n": 30,
+    "accuracy": 0.13333333333333333,
+    "f1_macro": 0.13333333333333333,
+    "per_label": {
+      "analysis": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 1
+      },
+      "discussion_question": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 11
+      },
+      "help_request": {
+        "precision": 1.0,
+        "recall": 0.36363636363636365,
+        "f1": 0.5333333333333333,
+        "support": 11
+      },
+      "hot_take": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 7
+      }
+    }
+  },
+  "predictions": [
+    {
+      "text": "Ask HN: Now that we're in the singularity, are you doing anything differently?\n\nI had the word probably in the title, but it wouldn't fit. Now that AI is increasing in capability at an absurd rate, are you living your life differently at all? Just going through the motions? Hiding out in a bunker? I guess my life has mostly been unchanged other than too many late nights experimenting with AI. I think some part of me is still in disbelief, that we're here.",
+      "gold": "discussion_question",
+      "predicted": "hot_take"
+    },
+    {
+      "text": "Ask HN: Could someone share a lobste.rs invite?\n\nHello! I've been lurking in the irc chat for lobsters for a week or two and haven't caught anyone to ask for an invite! Would a kind soul help me out! I lurk alot in lobste.rs and lately I've been wanting to comment. Any kindness would be appreciated.",
+      "gold": "help_request",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: Would you support a law banning filming people in public?\n\n(Except for purposes of newsworthy events) Or do you think people should be allowed to just film anyone and everyone and upload it to YouTube, have everyone's faces scanned, etc? As currently in most places.",
+      "gold": "discussion_question",
+      "predicted": "hot_take"
+    },
+    {
+      "text": "Ask HN: Is this the beginning of the end of open source?\n\nIf you're following the photopea incident, I'm sure you'd concur that the writing was on the wall. It's an inevitable outcome of the rise of AI in software dev. Any project that sees a semblance of success will be cloned overnight many times over and will find itself competing with its own copies. We saw glimpses of a similar situation in the past when large cloud platforms cloned popular softwares in a not a very dissimilar manner. This led to the creation of \"source available\" as an alternative to open source that gained some traction of its own. But since this mostly affected a few large players, open source by and itself was large unaffected still supported by large volumes of individuals driven by passion, motivated towards their craft. The concept of open source is itself something of an anomaly not seen in any other industry or at any other time in history. Partly fueled by an individual's desire to exhibit original work, and partly supported by the fact that code needs someone of an equal to work with, it still allowed authors to reap a net benefit while giving out their IP for free. LLMs have turned that picture over completely. It's not only trivial to derive, for all purposes, an exact copy of the IP while obscuring the source, it's also possible to maintain and operate the IP with a relatively low bar of expertise. But the other inconspicuous problem brought about by LLMs is that can you even claim original work any more? When no one believes that you wrote it yourself, what motivation remains to continue publishing as open source? With no net benefit to revealing your IP, will we see a revival to closed source distribution again?",
+      "gold": "hot_take",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: How long before someone reverse-engineers Windows?\n\nIt just occurred to me that similar to Photoshop suite, someone is already working on getting Windows 10/11 reverse-engineered in a clean-room fashion. I don't want to get into the discussion over the whole Craft suite, it's already been the talk of past week, after all, but judging by the pure popularity and the number of merge requests created within those couple days for just their Photoshop equivalent app, I am guessing these projects are not* going away anytime soon and they will, in fact, polish-out majority of issues: https://github.com/storytold/photocraft/pulls Also, while the original authors claim it was done without the debugger, I am absolutely certain thousands have their LLMs actively analyzing Adobe Suite now to get understand the knicks and crannies of it. So if people hating on Adobe flocked to contribute to this project so enthusiastically, I guess we can only imagine the sheer amount of interest worldwide an open-source Windows would bring, and not only from the volunteers this time around..",
+      "gold": "hot_take",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: Social network with AI agents \u2013 why bad, why good?\n\nHello! I can't get my mind off the idea of building an AI-native social network. Every user has its own agent (only one), which can talk to other agents or check content on the user's behalf. That way, the agent can \"process\" far more information about people than the human, and help in building relations. Why it is a bad/good idea? Worth trying?",
+      "gold": "discussion_question",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: Will mental health improve as AI brings mathematicians down to earth?\n\nDo you think billions of people will now breathe a sigh of relief as the apparently superhuman intellectual abilities of mathematicians are automated away by AI?",
+      "gold": "hot_take",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: Need Email Deliverability Expert\n\nWe're having an urgent issue with email deliverability. Does anyone know someone or a service who can help? Any and all recs are helpful :)",
+      "gold": "help_request",
+      "predicted": "help_request"
+    },
+    {
+      "text": "Ask HN: How to slow down AI development speed(also, estimate my ideas, please)\n\nHello everybody. So, the first: we should abandon likes and go to top-lists instead of them, and say \"this is on first place of importance\", \"this is third place\", and finally we will find the medium: \"2nd place in average\" . To avoid sybil-attacks and get needed money, we may register proofs that we are really person with this e-mail, date and place of birth, first and last name to charity companies - they may reveal data about you like \"this is a unique person\", \"this is 18+ person\" etc., whether we want to deanonymize registered person or not.(Proof of Personhood/PoP + Sovereign Identity?) Then, we should alarm/whistleblow the AI disaster as the most important things in the world* Then, we should watch somehow who uses/trains AI. Some suggestions: OS, providers, antivirus systems. If you're closing this data or openly train AI too fast - Then we will use cryptocurrency of smart-contracts to \"sanction\" personally - people in your country will never accept money that has ever been into your hands and will buy only goods with mark on it \"Income from this product will never be into hands of those who are in not in our white list(detailed citizens) etc., and they will never be into hands of those people are in black list (Tainted Coins Audit?)* Then, we should create IdeaPledge. Manifest is too long and AI-generated(so that I can't post it here), but TL;DR we should stop be such commies on the Internet information, and still not be greedy: we should try to agree with any information producer how much does his information cost. We should add payments like \"If you're rich - pay 10x as much of the base cost, if you're poor - for free, but you should prove you studied something\". and similar production - we should make internet-economics work not for free and not for corporations, but for world improvement, and ideas how to slow down AI development this way will be much better. P.S. AI mentioned you may be too worried about privacy(personally I don't mind it roughly speaking about myself), so may you suggest any alternatives/trade-offs? --- * We may also add weights to voices * Also, this is a good place for suggesting your dreams about the perfect world. ** Also, we may just boycott a lot of US military this way and economize a lot of money for much more useful purposes",
+      "gold": "hot_take",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: Thoughts about the Gemini Web app?\n\nI'm a long time user of Gemini, but recently started exploring other options, and it just feels so behind. with ChatGPT, it can call tools and it actually feels like its taking effort.",
+      "gold": "hot_take",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: Positive text origin verification\n\nIs anyone working on a positive text origin verification standard? Everyday it gets harder to distinguish between AI generated content and human generated content. This will never really work on the side of the labs but for people looking to actively prove they're the ones that wrote something there's an incentive to voluntarily collect that evidence. Is anyone working on this?",
+      "gold": "discussion_question",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: How will programming language design change as more code comes from AI?\n\nIt appears that we're moving to a world where human programmers deal less and less with specific code details. How do you expect/prefer language designers' priorities to shift? e.g. less toward human friendliness changes, more towards machine verifiability, etc?",
+      "gold": "discussion_question",
+      "predicted": "hot_take"
+    },
+    {
+      "text": "Ask HN: Fake abuse reports keep auto-blocking my site on Cloudflare\n\nI run a small site on Cloudflare's Pro plan. Since 26 September, someone has filed the same fake abuse report against it six times. Each time, Cloudflare automatically puts a \"Suspected Malware\" warning on my homepage and login pages, and it stays until a person reviews it. The reports are word for word identical. They describe an \"order\" and product pages that have never existed on my site (they return 404). The file hash in the report doesn't match the hash in its own VirusTotal link, which returns \"Item not found\". Only the date changes, and twice it's been misspelled (\"October 52026\", \"Octoboer 8 2026\"). Cloudflare's team has cleared four of them. The reporter pastes the same text again within a day. The result is that my homepage has been blocked for most of two weeks, my traffic has halved, and Google is indexing the warning page instead of my site. I've opened support cases and requested reviews each time. I've had one reply, on 5 October, and nothing on a lasting fix. I'm not asking for special treatment. I'd like to know: 1. Is there a way to stop automatic mitigations from a reporter or text that has already been shown to be false? 2. Is there a manual-review setting for a domain? 3. Has anyone else seen the abuse form used like this, and how did it end? The same problem is described in my open case with Cloudflare (#02370521). Thanks for any pointers, and if anyone from Cloudflare's abuse team reads this, I'd welcome a reply.",
+      "gold": "help_request",
+      "predicted": "help_request"
+    },
+    {
+      "text": "Ask HN: Frontier Capability on Average Computers\n\nI really want to find a way to get frontier-level intelligence on local hardware. I think some really cool ways to get this have been done already like the technique of spreading an LLMs weights across a fast-enough SSD and then only serving up an expert at a time on the GPU/SoC. I have this idea to make a tool that lets people download several small open-weight models and they act like experts but are different very task specific models with a harness designed to keep track of their thoughts & work to let normal hardware be able to get close to frontier (or just useful level intelligence). Basically, I want to have a model that acts like a router or decision maker where you start your chat with initially (say a coding task for example) and it decides what model does the work next. If it needs to research it writes down in an .MD what it needs to find out, if it needs to write code, another model starts working but the other models memory & work get saved to an .MD (or folder of .MDs) and lets you get real work done but completely locally. This might already be done but its just an idea I had and I wanted to see what the smart people on the internet thought or how they would approach this. I might also just be able to ask AI.",
+      "gold": "discussion_question",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: Is Agentic Coding really faster?\n\nI am trying to get a grasp of what we can do with agents. I am an avid user of agentic coding. But somehow I think I code faster by hand (by IDEs I mean). I've always had a sketch approach to coding. Where I kinda lay out the pieces of what needs to be done and then finish them in chunks. That way you keep building a mental picture of what needs doing. Lately I've noticed something - its quite fast to analyze a new code-base with agents for sure especially messy ones. But once I do get a hold of the codebase (even larger ones), I can change things by hand quite quickly. My bottleneck seems to be typing, but manipulating the mental map is a lot faster. Does this match other folks experience or am I deluding myself ?",
+      "gold": "discussion_question",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: Are agent benchmarks the new credit ratings?\n\nI did some talking to engineers at new-ish startups and agent companies are buying benchmarks to prove reliability to their customers. I'm theorizing that it looks a lot like pre-2008 credit ratings: the party being rated pays for the rating. If you were to buy, or even approve an agent product, how much do you care about these benchmarks? What gets it over the line for you?",
+      "gold": "hot_take",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: How to release an open no blob WiFi stack for ESP32 c3?\n\nI recently created a small wifi lab bench to create a no blob open wifi stack for esp32 c3. It is working now and code is fully readable including all the calibration jazz. To avoid any legal issues what is the best way to release such kind of a sw stack? I already know it will require a new fcc but fully blind on how to relase, any help or directions welcome.",
+      "gold": "help_request",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: How do I stop Gemini Live from asking.\"Would like to know more about..?\"\n\nIn other words, how do I setup a AGENTS.md or behavior rules for Gemini Live?",
+      "gold": "help_request",
+      "predicted": "help_request"
+    },
+    {
+      "text": "Ask HN: Do you also feel that it's impossible to keep up with AI?\n\nI have a tech background, I haven't been super active in coding or other things, but I still play with stuff a lot. And yet, in the past ~2 years, I often feel that it's pretty much impossible to keep up with the latest AI development (in particular regarding vibe coding), which in turns gives me less energy or determination to explore the latest thing. How do you feel about it? And did you find a solution to stay motivated to learn and get better at using AI?",
+      "gold": "discussion_question",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: How can this be legal?\n\nHow can it be legal, at least in the EU, that if you are 1 hour + 1 minute late to pick up a car rental that you already paid for in full, plus full insurance, that they cancel your booking, rent it out to another customer and keep your money with no refund? This is the case with SIXT car rental at least, probably others. This weekend in Portugal this happened to me and one other person who was in the location at the same time as me. It is in their (extensive) terms document. Surely this can't be legal as the payment for the product / service has already been made. What difference does it make to them where the car is? They are making double the money for the same service. Illicitly it seems. Legacy, bureaucratic, dinosaur companies like this are a old-world-mentality plague.",
+      "gold": "help_request",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: CAD for wood working with LLM support?\n\nI\u2019m a hobbyist woodworker. I manually design simple things in Shapr3d with a lot of patience when I build things. I wonder in the time of LLMs if there is an effective way to accelerate the 3D model design using AI.. Anybody tried using AI to model wood projects? Any tools to recommend?",
+      "gold": "help_request",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: What Got You into Rust?\n\nBack in 2024 I was experimenting with prosthetic arms and trying to figure out how to build one with an EMG sensor. The problem I kept running into was that the EMG sensor kept crashing the Arduino IDE. It spat out data at an extremely high rate, and my RAM couldn't keep up with it, being on a potato laptop. That's when I thought, \"Okay, maybe let's try Rust. What's the worst that can happen?\" This is the first thing I ever built in Rust: https://github.com/CLoaKY233/serial-plotter I used a sliding window: keep deleting the oldest values and keep pushing the newer ones onto the graph. It looked a bit like a snake chasing its tail, but it's what actually worked for us later at the Smart India Hackathon 2024 Hardware finals (we didn't win). Sharing something from back when trying something new and building something new felt exciting. Maybe we'll never get to build things quite the same way again :D So I'd love to hear what got you into Rust, what your first Rust project looked like, and what you've cooked since :>",
+      "gold": "discussion_question",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: System One models for autonomous agents\n\nI've seen a few impressive demos of Typesafe's new paradigm with System One models, and it seemed really clear to me that this was probably the direction the industry, especially for autonomous agents, was headed. It's been a while though, and the major providers still seem to rely on more powerful LLMs (System Two) for all tasks, regardless of complexity. Similar to how chain of thought arose, I thought the System One/System Two Thinking Fast and Slow model was one of those human structures that fit really well onto training neural nets, and I thought that this new paradigm could really change things. That doesn't seem to be the case so far though, and I'm kind of puzzled to why this hasn't broken the industry open by now. Of course my predictions are not infallible, and one shouldn't expect much accuracy or for progress to abide by rigid schedules, but nonetheless: how come Kahneman Computer Use models aren't everywhere by now?",
+      "gold": "hot_take",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: How do you handle AI security for automated vulnerability management?\n\nHello World! So I am new to the world of cybersecurity, and after some back and forth with AI, I chose to use a specific tool that was recommended for automated vulnerability detection & patching, but I think the issue I encountered is something common to all similar platforms that provide AI security fixes in 2026. It proposed a fix to an issue labeled 'critical'. I gave the specific file and the fix to Gemini, and, it disagreed strongly. My trust in the platform immediately degraded. It shows in my thinking that AI security platforms for repositories are unreliable, unless you cross check every critical/high vulnerability as a human with another AI tool as well. For example, for another issue labeled 'High', the fix, I cross-checked, was correct in that case. But that that one 'critical' issue, which turned out to be not a bug at all, and certainly not critical at all, has degraded my trust strongly in AI security platforms for automated vulnerability detection & patching. Note, to prevent confusion, with automated patching I mean automated pull requests with AI-proposed fixes, pending explicit human merging. Now, I wonder what you guys use (instead, if at all), and how reliable your security tool(s) are, if at all, for automated vulnerability detection (& patching.) Happy Coding! Worldwide Wishes, Behan",
+      "gold": "help_request",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: Most recent post [dead] in seconds\n\nHey! I'd like help knowing what I did wrong. I just learned what dead posts are. I'm also learning to self-promote less, 90/10 split. Is there anything wrong with the post itself? Disclaimer, I posted it on LinkedIn, but with \"I wrote more about the challenges building this on HackerNews. <link>\" I emailed the mods a week ago. But I'm guessing their busy. So I'd appreciate any help. Thank you!!",
+      "gold": "help_request",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: Can we immortalize your startup in our Ultracapitalism game?\n\nHello, HN! We've been hard at work building a company-building autobattler that's strategically deep but also doesn't take itself too seriously. Ultracapitalism has you choose a founder and draft assets to fill out your company quarter by quarter: interns, robots, schemes, AI, private planes, and more. Asynchronous multiplayer pits your company against other real companies at the end of each fiscal year, and the goal is to dominate the market. In addition to multiplayer, we also have PvE rivals that everyone battles against periodically, and we'd love to add a stylized version of YOUR startup/company as one of those rivals. WHAT WE NEED FROM YOU: - Company name - Around 5-10 assets that define your company identity - General CEO personality (optional; we'll design a CEO image for each company with any info we have here) You can also use the game's Build Designer if you prefer, which gives a UI for building a company board of assets, but text here is just fine! Web-based build designer: https://ultracapitalism.io/build-designer WHAT IS AN ASSET? We've got ~450 assets to choose from in the game already (you can browse them all at https://ultracapitalism.io/assets) but honestly we're still adding a ton more (shooting for ~1000 before the full game launch) so you could also come up with your own here that we'll probably add (or at least map to something equivalent). You can also see/play the game yourself here: https://store.steampowered.com/app/5176610/Ultracapitalism/",
+      "gold": "discussion_question",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: Do you use goto, or labeled break/continue?\n\nC# 15 (in preview with .NET 11) lets break and continue target an outer loop by label: outer: for (int x = 0; x < xMax; x++) { for (int y = 0; y < yMax; y++) { if (ShouldSkipRest(x, y)) continue outer; if (ShouldExitAll(x, y)) break outer; } } Honestly, \"goto\" never even comes to mind when I write an algorithm. I find it hard to follow, so when I need to leave nested loops I extract a method and \"return\" instead. Do you use \"goto\" in real code? Do you think you'll use labeled break/continue? https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-15#labeled-break-and-continue",
+      "gold": "analysis",
+      "predicted": "hot_take"
+    },
+    {
+      "text": "Ask HN: Best value/money AI coding plan bundle?\n\nI've been considering subscribing to a bundle from one of the purveyors of AI coding tools. I currently have access to ChatGPT Pro, GitHub Copilot, etc. I've used Claude Code, but can't really distinguish the vibes between the models. However, I often run out of tokens at the \"Plus\" plan levels even when using GPT-6.1-Sol as my daily driver. I'm considering Google Antigravity Ultra at the $100 tier. It also seems to include a generous rate limits and quota for their models and series of extra features including: cloud storage, YouTube Premium, etc. I figure that if the Google models don't perform as well as the \"frontier\" labs then I can always supplement with $20 plans and have the Anti-gravity tooling use the more capable models as orchestrators and use subagents. What do folks think, what's the best value for the money bundle out there right now?",
+      "gold": "help_request",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Ask HN: Optimize a low-end Windows 10 laptop?\n\nI got a Chuwi Minibook X, and am about to install a fresh windows 10 copy. I'm going to use it for basic web browsing, write documents, maybe a bit of coding. nothing heavy. (it cant handle it) I did some research and settled on getting tiny 10. (tiny10 x64 23h2.iso) Software i'm getting: - Process Lasso - Mem Reduct - Win Aero Tweaker - O&O ShutUp10 - O&O AppBuster Any other recommendations? //thanks in advance!",
+      "gold": "help_request",
+      "predicted": "help_request"
+    },
+    {
+      "text": "Ask HN: A way for HN to verify \"founders\" and give them extra voting power?\n\nBasically, as long as you could provide evidence of self-employment/entrepreneurship (e.g., a link to your app in the App Store), HN would take your votes/comments/posts more seriously. This could address the problem of employees vastly outnumbering founders on HN. What do you think of this idea?",
+      "gold": "discussion_question",
+      "predicted": "analysis"
+    }
+  ]
+}
