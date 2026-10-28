@@ -195,6 +195,18 @@ I used Claude (Claude Code) throughout unit 5.
 
 **Pre-labelling disclosure:** Claude pre-labelled all 200 posts in `labels.csv` from my written definitions, in one pass, reading roughly the first 500 characters of each. I did not label any posts cold first. The committed version of `labels.csv` has Claude's labels, and every row's `note` says "pre-labelled by Claude, not yet checked by me". Claude's pre-labelling and my corrections are separate steps. Any label I changed after reading the post is mine, and I have not recorded those changes in this README yet.
 
+**Unit 6: what Claude did**
+
+I used Claude (Claude Code) again in unit 6. Most of this unit's work was done by Claude at my request, so I am listing it plainly.
+
+- **Fixing `labels.csv`.** `baseline.py` crashed on `labels.csv` because the file had been corrupted in the last commit (broken quoting, extra commas, mixed-case labels, garbled characters). Claude found the cause by comparing against the earlier commit and restored that version after I confirmed. That restored version is the 200-row file the results above come from.
+- **The baseline.** Claude ran the zero-shot baseline twice, with my definitions and with bare label names. The bare-names run scored higher (0.400 vs 0.133 accuracy), which is why the Baseline column uses it. Claude's explanation, that the model copes better with short label names than long definitions, is a guess I did not test.
+- **Staff labels.** Claude, not me, labelled the 30 staff posts from `data/staff_taxonomy.md`, and it matched staff on all 30. I did not open `data/staff_labels.csv` before the labels were saved. The agreement report therefore measures Claude's application of a rule, not my own consistency.
+- **Spotting patterns in errors.** Claude read `results_three_seeds_before.json` and found three patterns I had not noticed: the model never predicts `analysis` or `hot_take` in any seed (so accuracy is capped near 0.73), real `hot_take` posts are always mis-called as `discussion_question` or `help_request` and never the other way, and the model's confidence is about the same when right as when wrong. The first two come straight from the confusion matrices. The third led Claude to suggest the under-training diagnosis, and I have not checked that diagnosis any further than the retrain.
+- **The improvement.** Claude chose and ran the one change (3 to 10 epochs) and reported that it helped only a little.
+- **Drafting.** Claude drafted the run logs, verdicts, diagnoses and this section from the result files. Where it could not know something (for example whether I had done a blind re-label), I checked and it was recorded as not done.
+
+What I changed or decided myself: Ask Claude do not change the labels after knowing the staff lables.
 <!-- ═══════════════════════ UNIT 6 — THE TEST ═══════════════════════
 
      Don't fill these in during unit 5.
