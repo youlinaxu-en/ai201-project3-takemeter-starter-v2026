@@ -237,27 +237,31 @@ Separately, my written definitions made the zero-shot baseline worse (accuracy 0
 
 | Criterion | Target | Seed 42 | Seed 7 | Seed 2024 | Verdict |
 |---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |
+| 1. Overall accuracy | ≥ 0.60 and ≥ 0.15 above the majority baseline (0.367 on the test split, so ≥ 0.517) | 0.500 | 0.467 | 0.433 | MISSED |
+| 2. `help_request`, `discussion_question`, `hot_take` each F1 | ≥ 0.55 each | `hot_take` 0.000 (dq 0.545, hr 0.600) | `hot_take` 0.000 (dq 0.533, hr 0.545) | `hot_take` 0.000 (dq 0.500, hr 0.500) | MISSED |
+| 3. `analysis` F1 | ≥ 0.40 | 0.000 | 0.000 | 0.000 | MISSED |
+| 4. Label balance (each label 30 to 90 of 200) | `analysis` ≥ 30, none > 90 | `analysis` 10 (5%) | `analysis` 10 (5%) | `analysis` 10 (5%) | MISSED |
+| 5. Blind re-label agreement | ≥ 26 / 30 (87%) | not run | not run | not run | MISSED |
 
 ### Confusion matrix
 
 <!-- ⚠️ TYPED AS A MARKDOWN TABLE. The notebook prints one ready to paste.
      An image of a matrix earns nothing. -->
 
-| true \ predicted |  |  |  |
-|---|---|---|---|
-| **** |  |  |  |
-| **** |  |  |  |
-| **** |  |  |  |
+Seed 42 (the notebook's default seed), 30 test posts:
+
+| true \ predicted | analysis | hot_take | discussion_question | help_request |
+|---|---|---|---|---|
+| **analysis** | 0 | 0 | 1 | 0 |
+| **hot_take** | 0 | 0 | 2 | 5 |
+| **discussion_question** | 0 | 0 | 6 | 5 |
+| **help_request** | 0 | 0 | 2 | 9 |
 
 **My biggest off-diagonal number, and what it means:**
 <!-- Not "the model made mistakes" — WHICH boundary it didn't learn, and which
      direction. "7 real analysis posts were called hot_take and only 3 went the
      other way" is a direction, not just an error rate. -->
+In seed 42 the biggest off-diagonal number is 5, and it is tied: `hot_take` called `help_request` (5 of 7) and `discussion_question` called `help_request` (5 of 11). The more important thing is the direction across all three seeds. The `analysis` and `hot_take` columns are zero in every seed, so the model never predicts either label, and every real `hot_take` goes to one of the other two: `help_request` in seed 42 (5 of 7), `discussion_question` in seed 7 (6 of 7) and seed 2024 (4 of 7, with 3 to `help_request`). Nothing ever flows the other way into `hot_take`. So it has not learned the `hot_take` boundary at all, which is stronger than "confuses `hot_take` with `discussion_question`". The model only distinguishes `help_request` from `discussion_question`, and the 8 test posts labelled `hot_take` or `analysis` (27% of the test split) are wrong by default.
 
 
 
@@ -270,11 +274,11 @@ Separately, my written definitions made the zero-shot baseline worse (accuracy 0
 
 | # | Criterion | Target | Verdict | How I decided |
 |---|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
-| 4 |  |  |  |  |
-| 5 |  |  |  |  |
+| 1 | Overall accuracy ≥ 0.60 and ≥ 0.15 above majority | ≥ 0.60 / ≥ 0.517 | MISSED | 0.500, 0.467, 0.433. Fails the 0.60 floor in all three seeds, and fails the majority margin too: always guessing the most common label scores 11/30 = 0.367, so I needed 0.517 and no seed got there. |
+| 2 | Three main labels each F1 ≥ 0.55 | ≥ 0.55 each | MISSED | `hot_take` F1 is 0.000 in all three seeds. `discussion_question` (0.545, 0.533, 0.500) and `help_request` (0.600, 0.545, 0.500) are also under 0.55 in seeds 7 and 2024, and `discussion_question` is under it in seed 42 by 0.005. Only `help_request` in seed 42 clears the bar. |
+| 3 | `analysis` F1 ≥ 0.40 | ≥ 0.40 | MISSED | F1 0.000 in every seed. There is only 1 `analysis` post in the test split, so the number can only be 0 or a large jump, but it is 0 every time. |
+| 4 | Each label 30 to 90 of the 200 posts | 30 to 90 each | MISSED | Counts are 74 `discussion_question`, 72 `help_request`, 44 `hot_take`, 10 `analysis`. `analysis` is at 5%, far under the 30-post floor. The other three are inside the range. My stated plan for this case (merge `analysis` into `hot_take`) was not carried out. |
+| 5 | 26 of 30 on a blind re-label | ≥ 26 / 30 | MISSED | I have no blind re-label of my own 200 posts, so there is no number to check against the target. The staff-set agreement (30/30) is a different test and does not stand in for it. I'm recording this as MISSED rather than as untested so the target is not quietly dropped. |
 
 **Diagnoses**
 
@@ -286,6 +290,26 @@ Separately, my written definitions made the zero-shot baseline worse (accuracy 0
      ⚠️ Use your agreement report as evidence. It is the only instrument you
      have that can tell a LABELLING problem from a MODEL problem, and this
      section is graded on whether you used it that way. -->
+
+All five criteria are MISSED. Each miss, with its cause and how I know:
+
+1. **Overall accuracy (0.500, 0.467, 0.433): too few examples for two labels, plus a hard pair.** *How I know:* the `analysis` and `hot_take` columns of the confusion matrix are zero in every seed, so the model never predicts them. Those two labels are 8 of the 30 test posts (27%), so accuracy cannot pass about 0.73 even if the other two labels were perfect. It is also under the 0.517 needed to beat the majority baseline (0.367) by 15 points.
+2. **`hot_take` F1 of 0.000 in every seed (criterion 2): a genuinely hard label pair, and I can't rule out my own labelling.** *How I know:* the direction in the matrix. Real `hot_take` posts are called `discussion_question` (6 of 7 in seed 7) or `help_request` (5 of 7 in seed 42), and nothing is ever called `hot_take`. It is not just a count problem, because `hot_take` has 44 posts (about 31 in train). My agreement report did not find an inconsistency in applying written rules (30 of 30), so it gives no evidence of a labelling problem. But it also can't clear my own labels, because it tested the staff taxonomy, not my `hot_take` / `discussion_question` rule. So this is "hard pair, labels unchecked", not proven either way.
+3. **`analysis` F1 of 0.000 in every seed (criterion 3): too few examples.** *How I know:* there are 10 `analysis` posts in total, about 7 in train and 1 in test, and the model never predicts it. With 1 test post the score can only be 0 or a big jump, so it can't be a stable number.
+4. **Label balance (criterion 4): too few examples, a data-collection shortfall.** *How I know:* the counts are 74 / 72 / 44 / 10, so `analysis` is 5% against a 15% floor. This is a measurement of the dataset, not of the model.
+5. **Blind re-label (criterion 5): not done.** *How I know:* there is no re-label file or number. This is a process miss, not a model or data problem.
+
+I did not revise any criterion. All five were measurable and I missed them, so none counts as "broken", and lowering a number would not be a legitimate change.
+
+The detail behind items 1 to 4 follows.
+
+**Criteria 1, 2, 3 and 4: too few examples, and a hard label pair.** The model never predicts `analysis` or `hot_take` in any seed. `analysis` has 10 labelled posts (about 7 in train, 1 in test), which is a data-quantity problem and is exactly what criterion 4 measured, so criteria 3 and 4 are one failure. `hot_take` has 44 posts (about 31 in train) but still scores 0, so count is not the whole story; this is where the genuinely hard pair comes in. Its posts are mixed into `discussion_question` (seeds 7 and 2024) or `help_request` (seed 42), and my decision rule for the boundary is "take the question mark off and see if a claim is left". A rule that depends on removing the question mark is hard for a model that sees the whole text, question mark included. Because `hot_take` and `analysis` together make up 27% of the test split and are always wrong, accuracy is capped near 0.73 even for a model that is perfect on the other two labels, and it reached 0.43 to 0.50, so criterion 1 follows from the same cause. Criterion 2 has a further smaller miss: `discussion_question` and `help_request` sit at 0.50 to 0.60, just under the 0.55 floor in some seeds.
+
+**Was it the labels or the model? What the agreement report can and can't say.** The agreement report is my only instrument for this. Claude matched staff on 30 of 30 posts under a written rule it did not write, so applying a written definition consistently is not obviously the weak point. That points away from careless application of the rules and toward the model and the data. But it is weaker evidence than it looks. Those 30 posts used the staff taxonomy, not my `hot_take` / `discussion_question` rule, which is the one that failed. They came in clean 10 / 10 / 10 blocks and were not my own labels. And I have no blind re-label of my own 200 (criterion 5), so I cannot rule out a labelling problem on `hot_take`. There is one known labelling weakness: my 200 labels were made by Claude in one pass from roughly the first 500 characters of each post, which could mislabel long posts, and the model itself truncates at 128 tokens. So the honest diagnosis for `hot_take` is "hard label pair, possibly worsened by labels I haven't checked", not "labels fine, model bad".
+
+**Criterion 5: not done, not a model problem.** The blind re-label was never run, so there is nothing to diagnose except that it should have happened before training, as I wrote in `criteria.md`.
+
+**A sign the model is barely learning.** In every seed, mean confidence when right (0.36, 0.35, 0.38) is almost the same as when wrong (0.36, 0.35, 0.38). The model is not more sure when it is correct, which fits a model that has learned only a crude `help_request` versus `discussion_question` split from about 139 training posts.
 
 
 
@@ -299,7 +323,9 @@ Separately, my written definitions made the zero-shot baseline worse (accuracy 0
      data/staff_taxonomy.md, not your own — so every argument below is made
      from those definitions and those decision rules. -->
 
-**Agreement rate:** ___ / 30 = ___%
+**Agreement rate:** 30 / 30 = 100% (`agreement_results.json`)
+
+**Who labelled these:** I asked Claude to label them by following  `data/staff_taxonomy.md`.
 
 <!-- Nobody grades this number. A 60% who argues every disagreement from the
      stated rules beats a 95% who wrote "staff was right" nine times. Several
@@ -321,47 +347,101 @@ Separately, my written definitions made the zero-shot baseline worse (accuracy 0
      written rule two different ways on 30 posts, that is direct evidence about
      what you did across your own 200. -->
 
+There were no disagreements, so there is nothing to adjudicate and no post to sort into (a), (b) or (c) as a real disagreement. Instead, these are the posts I was least sure of when labelling. The first three (`sp_010`, `sp_029`, `sp_005`) were the ones I was unsure about while labelling, before seeing staff; the last two (`sp_007`, `sp_014`) are posts that looked like they could mislead, which I picked out afterwards, not ones I hesitated on at the time. Each one matched staff anyway. The pile is where it would have gone if staff had disagreed.
+
 **1.**
-> *The post:*
+> *The post:* `sp_010` — "Three of us ran the same session on the same day, different shoes, within 10 seconds of each other over 5 miles. I'm not saying shoes do nothing, but whatever they do was smaller than the noise between three people."
 >
-> *Staff said / I said:*
+> *Staff said / I said:* both `analysis` (no disagreement). The alternative was `hot_take`.
 >
-> *My call, and why:*
+> *My call, and why:* `analysis`. The hesitation was the hedged tone ("I'm not saying shoes do nothing"), which reads like opinion. But rule 1 asks whether the fact carries the argument, and here the 10-second spread between three runners is the whole reason for the conclusion. Remove it and nothing is left.
 >
-> *Which pile:*
+> *Which pile:* (c). Rule 1 covers it, but "carries the argument" is a judgement call on a post this informal and small (three runners).
 
 **2.**
-> *The post:*
+> *The post:* `sp_029` — "Just realised the shoes I set every PB in this year are the ones I bought by accident in the wrong size."
 >
-> *Staff said / I said:*
+> *Staff said / I said:* both `reaction`. The alternatives were `analysis` and `hot_take`.
 >
-> *My call, and why:*
+> *My call, and why:* `reaction`. It has a checkable-sounding fact (every PB in the same shoes) and no stated emotion, which is why it was uncertain. But it makes no argument and no general claim. It is the writer reporting something they just noticed about themselves, which is how the taxonomy describes `reaction`. Rule 3 doesn't pull it to `analysis` because the fact isn't used to argue anything.
 >
-> *Which pile:*
+> *Which pile:* (c). The definition says "feeling rather than argument", and this post has little feeling in it. The rule doesn't say what to do with a plain recent observation, so I am defending my reading rather than pointing to a rule line.
 
-**What the pattern in my disagreements tells me:**
+**3.**
+> *The post:* `sp_005` — "Carbon plates aren't the whole story. My times dropped 2% in the shoes and another 2% the following year in the same pair, when the only thing that changed was going from 35 to 50 miles a week."
+>
+> *Staff said / I said:* both `analysis`. The alternative was `hot_take`.
+>
+> *My call, and why:* `analysis`. The opening sentence is a bare claim, which made me pause. But the rest is the reason for it: the same pair of shoes, a second 2% drop, and a mileage change as the only difference. By rule 1 that fact does the work, so it isn't a `hot_take` with a statistic added.
+>
+> *Which pile:* (c). Same boundary as post 1. The fact is load-bearing, but the post also opens with a general claim, so I am arguing which of the two the post spends more words on (rule 4).
 
+**4.**
+> *The post:* `sp_007` — "Ran the same loop in 4C and in 24C within a fortnight, same effort by heart rate. 90 seconds slower in the heat over six miles. People keep saying heat costs you 'a bit' and it's more than that."
+>
+> *Staff said / I said:* both `analysis`. The alternative was `reaction`, because it is about the writer's own run.
+>
+> *My call, and why:* `analysis`. Rule 3 says recency doesn't outrank evidence, and this post argues from specific numbers (4C vs 24C, 90 seconds, six miles) against a general claim.
+>
+> *Which pile:* none, a clean application of rule 3. I list it because the "writer's own experience" signal could have misled me.
+
+**5.**
+> *The post:* `sp_014` — "Times are down about 3% since the shoe rules changed, so obviously the shoes are the whole story and the sport has a problem."
+>
+> *Staff said / I said:* both `hot_take`. The alternative was `analysis`, because it contains a statistic.
+>
+> *My call, and why:* `hot_take`. The taxonomy's own example is almost this post: the 3% is decoration on a conclusion already reached ("obviously"). I was not truly unsure here. I list it because it is the case rule 1 was written for.
+>
+> *Which pile:* none, a clean application of rule 1.
+
+I was also fairly sure about `sp_018` ("Track sessions are wasted on anyone running slower than 8 minute miles"): the 8-minute figure is a cutoff, not evidence, so `hot_take`.
+
+**What the pattern in my uncertain posts tells me:**
+Is the set easy, or is the rule tight? Probably some of both, and I can't separate them from one run. The staff taxonomy says staff picked some posts because they are ambiguous and that a rate in the 70s is normal, so 100% means this set was cleaner than advertised. The 30 posts also split neatly into 10 `analysis`, 10 `hot_take` and 10 `reaction`, with short unambiguous `hot_take` and `reaction` posts, which makes them easy to apply. On the five posts above, rules 1 and 2 gave a clear answer, which is some evidence the rule is tight. Two caveats limit what this shows. It says nothing about my own 200 labels, where I wrote the rules myself and my agreement was never tested, and 30 posts with no errors only tells me the real error rate is probably low, not that it is zero.
 
 
 ---
 
 ## The Improvement
 
-**What I changed:**
+**What I changed:** One setting: `EPOCHS` from 3 to 10. Learning rate (2e-5), batch size (16), max length (128), labels, data and the three seeds (42, 7, 2024) are unchanged, so each seed gets the same train/validation/test split as before. Results are in `results_three_seeds_after.json`.
 
-**Which diagnosis pointed at it:**
+**Which diagnosis pointed at it:** The "model is barely learning" finding. With 139 training posts and batch size 16, 3 epochs is only about 27 optimizer steps, and in the Before run the model's mean confidence when right (about 0.36) was almost the same as when wrong (about 0.36), which looks like an under-trained model. I did not pick relabelling, because my agreement check found no disagreement to fix, and I did not add `analysis` posts, because I had no pool of unlabelled posts to draw from. This change cannot fix the `analysis` count or the `hot_take` / `discussion_question` boundary, so I expected little there.
 
 ### Run Log — After
 
 | Criterion | Target | Seed 42 | Seed 7 | Seed 2024 | Verdict |
 |---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |
+| 1. Overall accuracy | ≥ 0.60 and ≥ 0.517 | 0.567 | 0.500 | 0.500 | MISSED |
+| 2. `help_request`, `discussion_question`, `hot_take` each F1 | ≥ 0.55 each | `hot_take` 0.250 (dq 0.583, hr 0.667) | `hot_take` 0.250 (dq 0.500, hr 0.609) | `hot_take` 0.250 (dq 0.519, hr 0.583) | MISSED |
+| 3. `analysis` F1 | ≥ 0.40 | 0.000 | 0.000 | 0.000 | MISSED |
+| 4. Label balance (each label 30 to 90 of 200) | `analysis` ≥ 30, none > 90 | `analysis` 10 (5%) | `analysis` 10 (5%) | `analysis` 10 (5%) | MISSED |
+| 5. Blind re-label agreement | ≥ 26 / 30 (87%) | not run | not run | not run | MISSED |
+
+Before and after, side by side:
+
+| Measure | Before (42 / 7 / 2024) | After (42 / 7 / 2024) |
+|---|---|---|
+| Overall accuracy | 0.500 / 0.467 / 0.433 | 0.567 / 0.500 / 0.500 |
+| Macro F1 | 0.286 / 0.270 / 0.250 | 0.375 / 0.340 / 0.338 |
+| F1 — `analysis` | 0.000 / 0.000 / 0.000 | 0.000 / 0.000 / 0.000 |
+| F1 — `hot_take` | 0.000 / 0.000 / 0.000 | 0.250 / 0.250 / 0.250 |
+| F1 — `discussion_question` | 0.545 / 0.533 / 0.500 | 0.583 / 0.500 / 0.519 |
+| F1 — `help_request` | 0.600 / 0.545 / 0.500 | 0.667 / 0.609 / 0.583 |
+
+Confusion matrix after, seed 42:
+
+| true \ predicted | analysis | hot_take | discussion_question | help_request |
+|---|---|---|---|---|
+| **analysis** | 0 | 0 | 1 | 0 |
+| **hot_take** | 0 | 1 | 3 | 3 |
+| **discussion_question** | 0 | 0 | 7 | 4 |
+| **help_request** | 0 | 0 | 2 | 9 |
 
 **Did it help, and how do I know:**
+A little, but no verdict changed: all five criteria are still MISSED. Accuracy rose in all three seeds (mean 0.467 to 0.522) and macro F1 rose in all three (mean 0.269 to 0.351). The most visible change is that `hot_take` is now predicted: it gets exactly 1 of 7 right in every seed with no false positives (F1 0.250, up from 0.000). `help_request` improved in all three seeds, while `discussion_question` was mixed (up in seeds 42 and 2024, down in seed 7). `analysis` is unchanged at 0.000.
+
+I would not call this a solid improvement. Each seed's accuracy gain is 1 or 2 posts out of 30 (+0.067, +0.033, +0.067), and the notebook itself notes accuracy moves about 0.067 across seeds, so these gains are about the size of the noise. The `hot_take` change comes from one post per seed. The confidence signal is also still weak: confidence when right versus wrong is 0.53 vs 0.52 in seed 42 and 0.56 vs 0.50 and 0.57 vs 0.51 in the other seeds, a small gap. The honest reading is that more epochs fixed some under-training (the model now makes a first attempt at `hot_take`), but did not touch the bigger causes, which are the `analysis` count and the `hot_take` boundary.
 
 <!-- If it didn't, say so. Relabelling that didn't help is a genuinely
      interesting result and earns full credit. -->
@@ -374,11 +454,20 @@ Separately, my written definitions made the zero-shot baseline worse (accuracy 0
 
 <!-- For each criterion still missed: what you'd do, and why you stopped. -->
 
+All five criteria are still MISSED after the improvement. I stopped here because the retrain was one measured change, and the remaining problems need new data or a different task design, not another setting.
+
+1. **Overall accuracy (0.567, 0.500, 0.500 against ≥ 0.60):** I would fix this last, because it follows from criteria 2 and 3. With `analysis` always wrong and `hot_take` almost always wrong, accuracy cannot reach 0.60 unless those labels improve. Next step: more `hot_take` and `analysis` data, then retrain.
+2. **Every main label F1 ≥ 0.55:** `hot_take` is 0.250 (up from 0.000) and is the only label that fails in every seed. I would label more `hot_take` posts and, before that, re-label a sample of my existing `hot_take` and `discussion_question` rows blind, because I haven't yet checked whether my own rule ("take the question mark off") was applied consistently. If the re-label disagrees with my original labels on that pair, the fix is the labels, not the model.
+3. **`analysis` F1 ≥ 0.40:** this cannot be fixed by training. There are 10 `analysis` posts and 1 in the test split. I would either collect at least 30 more or follow my plan from `criteria.md` and merge `analysis` into `hot_take`.
+4. **Label balance:** `analysis` is 10 of 200 (5%). Same remedy as criterion 3: collect more or merge it into `hot_take`. I did not do either in this unit, because I had no new posts to draw from and the merge would change the task.
+5. **Blind re-label agreement:** I never ran it. I would do it first of all, because it is the only way to tell whether the `hot_take` problem is in my labels or in the model.
+
 
 
 **The gap between what I meant my labels to capture and what the model
 learned:**
 <!-- Two sentences. Your confusion matrix is the evidence. -->
+I meant `hot_take` to capture an unsupported claim about how the world is, even when it is phrased as a question, but in the matrix the model reads those posts by their surface form: 3 of 7 real `hot_take` posts are called `discussion_question` and 3 are called `help_request`, and only 1 is called `hot_take`. It has learned "is this a question or a request for help" much better than "is a claim being asserted", and it has not learned `analysis` at all.
 
 
 
